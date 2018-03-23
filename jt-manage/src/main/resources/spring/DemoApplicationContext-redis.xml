@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+	
+	<!-- 单例 -->
+	<!-- Spring管理jedis -->
+	<!-- <bean id="jedis" class="redis.clients.jedis.Jedis"> -->
+		<!-- 构造注入时使用index -->
+		<!-- 不导入源码时,形参的类型会维护,名称不会维护.用name会产生风险 -->
+		<!-- 构造方法出现形参个数相同的情况,用type区分 -->
+	<!--<constructor-arg index="0" value="${redis.host}" type="java.lang.String"/>
+		<constructor-arg index="1" value="${redis.port}" type="int"/>
+	</bean> -->
+	
+	
+	<!-- 线程池的配置 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<!-- 链接总数 -->
+		<property name="maxTotal" value="${redis.maxTotal}"/>
+		<!-- 最大空闲数量 -->
+		<property name="maxIdle" value="${redis.maxIdle}"/>
+		<!-- 最小空闲数量 -->
+		<property name="minIdle" value="${redis.minIdle}"/>
+	</bean>
+	
+	<!-- 工厂模式创建jedis链接 -->
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<!-- 主机和端口号 -->
+		<property name="hostName" value="${redis.host}"/>
+		<property name="port" value="${redis.port}"/>
+		<!-- 线程池配置 -->
+		<property name="poolConfig" ref="poolConfig"/>
+	</bean>
+	
+	<!-- 配置SpringJedisTemplate spring操作redis的API -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+		<!-- 配置redis工厂 -->
+		<property name="connectionFactory" ref="jedisConnectionFactory"/>
+	</bean>
+	
+</beans>

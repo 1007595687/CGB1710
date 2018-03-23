@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jt.manage.mapper.ItemMapper">
+
+	<!-- sql语句小写便于linux系统识别 -->
+	<select id="findItemAll" resultType="Item">
+		select * from tb_item order by updated desc
+	</select>
+	
+	<select id="findItemCount" resultType="int">
+		select count(*) from tb_item
+	</select>
+	
+	<select id="findItemByPage" resultType="Item">
+		select * from tb_item order by updated desc limit #{begin},#{rows}
+	</select>
+	
+	<select id="findItemCatName" resultType="String">
+		select name from tb_item_cat where id = #{itemCatId}
+	</select>
+	
+	<!-- collection取值
+		1.数组: array
+		2.List集合: list
+		3.Map: map中的key值
+	 -->
+	<update id="updateStatus">
+		update tb_item set status = #{status} where id in
+		<foreach collection="ids" open="(" close=")" separator="," item="id">
+			#{id}
+		</foreach>
+	</update>
+</mapper>

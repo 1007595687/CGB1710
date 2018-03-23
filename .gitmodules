@@ -1,0 +1,9 @@
+[submodule "jt-common"]
+	path = jt-common
+	url = ./jt-common/.git
+[submodule "jt-parent"]
+	path = jt-parent
+	url = ./jt-parent/.git
+[submodule "jt-manage"]
+	path = jt-manage
+	url = ./jt-manage/.git
